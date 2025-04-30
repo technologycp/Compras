@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Visualización de Ordenes</title>
+  <script src="https://unpkg.com/tabletop@1.5.1/tabletop.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      text-align: left;
+    }
+    th {
+      background-color: #007BFF;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .prioridad-Alta {
+      background-color: #ffcccc;
+    }
+    .prioridad-Media {
+      background-color: #fff0b3;
+    }
+    .prioridad-Baja {
+      background-color: #d4edda;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Órdenes de Compra</h1>
+<table id="data-table">
+  <thead>
+    <tr>
+      <th>Prioridad</th>
+      <th>Máquina</th>
+      <th>Cantidad</th>
+      <th>Especificación</th>
+      <th>Dimensiones (mm)</th>
+      <th>Tipo de Tornillo</th>
+      <th>Tuerca</th>
+      <th>Guasa</th>
+      <th>Pieza en Sólido</th>
+      <th>Proveedor</th>
+      <th>Fecha Solicitud</th>
+      <th>Fecha Pago</th>
+      <th>Fecha Entrega</th>
+      <th>Días FS-FP</th>
+      <th>Días FP-FE</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+  const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1L28IyG8NzEsIN7RYhOokOt83Go8PMtbcC9MmH_eKO8w/pubhtml';
+
+  function init() {
+    Tabletop.init({
+      key: publicSpreadsheetUrl,
+      simpleSheet: true,
+      callback: function(data) {
+        const tbody = document.querySelector("#data-table tbody");
+        data.forEach(row => {
+          const tr = document.createElement("tr");
+          const prioridadClase = row.Prioridad ? `prioridad-${row.Prioridad}` : '';
+          tr.classList.add(prioridadClase);
+
+          tr.innerHTML = `
+            <td>${row.Prioridad}</td>
+            <td>${row.Maquina}</td>
+            <td>${row.Cantidad}</td>
+            <td>${row.Especificacion}</td>
+            <td>${row['Dimensiones (mm)']}</td>
+            <td>${row['Tipo de Tornillo']}</td>
+            <td>${row.Tuerca}</td>
+            <td>${row.Guasa}</td>
+            <td>${row['Pieza en Solido']}</td>
+            <td>${row.Proveedor}</td>
+            <td>${row['Fecha de Solicitud']}</td>
+            <td>${row['Fecha de Pago']}</td>
+            <td>${row['Fecha de Entrega']}</td>
+            <td>${row['Dias entre FS y FP']}</td>
+            <td>${row['Dias entre FP y FE']}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
